@@ -1,0 +1,9 @@
+{
+    "name": "imraneshelby/php-oop-new",
+    "autoload": {
+        "psr-4": {
+            "Game\\": "src/"
+        }
+    },
+    "require": {}
+}

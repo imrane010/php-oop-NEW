@@ -1,15 +1,28 @@
 <?php
 
-require_once 'Character.php';
+require_once 'vendor/autoload.php';
 
-// Object met named arguments, waarbij alleen name, health en attack worden ingesteld
-$hero1 = new Character(name: "Hero1", role: "Warrior", health: 120, attack: 20);
+use Game\Character;
+use Game\Battle;
 
-// Object met named arguments, waarbij range op de standaardwaarde blijft en defense wordt overschreven
-$hero2 = new Character(name: "Hero2", role: "Mage", health: 90, attack: 15, defense: 10);
+// Character objecten aanmaken
+$hero = new Character(name: "Arthas", role: "Paladin", health: 100, attack: 30);
+$villain = new Character(name: "Gul'dan", role: "Warlock", health: 90, attack: 25);
 
-// Toon de stats voor beide characters
-$hero1->displayStats();
-$hero2->displayStats();
+// Eerste gevecht
+$battle1 = new Battle();
+$battle1->changeMaxRounds(5);
+$result1 = $battle1->startFight($hero, $villain);
+echo $battle1->getBattleLog();
+echo "Resultaat: $result1\n";
 
-?>
+// Reset health
+$hero->setHealth(100);
+$villain->setHealth(90);
+
+// Tweede gevecht
+$battle2 = new Battle();
+$battle2->changeMaxRounds(10);
+$result2 = $battle2->startFight($hero, $villain);
+echo $battle2->getBattleLog();
+echo "Resultaat: $result2\n";
