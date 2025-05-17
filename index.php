@@ -1,71 +1,35 @@
 <?php
-require_once 'vendor/autoload.php';
+/**
+ * Example Application
+ *
 
-use Game\Character;
-use Game\CharacterList;
-use Smarty;
+ */
 
-session_start();
+$smarty = new \Smarty\Smarty;
 
-$characterList = $_SESSION['characterList'] ?? new CharacterList();
-
-$template = new Smarty();
-$template->setTemplateDir('templates');
-
-$page = $_GET['page'] ?? 'home';
-
-switch ($page) {
-    case 'createCharacter':
-        $template->display('createCharacterForm.tpl');
-        break;
-
-    case 'saveCharacter':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'];
-            $role = $_POST['role'];
-            $health = (int) $_POST['health'];
-            $attack = (int) $_POST['attack'];
-            $defense = (int) $_POST['defense'];
-            $range = (int) $_POST['range'];
-
-            $character = new Character($name, $role, $health, $attack, $defense, $range);
-            $characterList->addCharacter($character);
-
-            $template->assign('character', $character);
-            $template->display('characterCreated.tpl');
-        }
-        break;
-
-    case 'characterList':
-        $template->assign('characters', $characterList->getCharacters());
-        $template->display('characterList.tpl');
-        break;
-
-    case 'viewCharacter':
-        $name = $_GET['name'] ?? '';
-        $character = $characterList->getCharacter($name);
-
-        if ($character instanceof Character) {
-            $template->assign('character', $character);
-            $template->display('character.tpl');
-        } else {
-            echo $character;
-        }
-        break;
-
-    case 'deleteCharacter':
-        $name = $_GET['name'] ?? '';
-        $character = $characterList->getCharacter($name);
-
-        if ($character instanceof Character) {
-            $characterList->removeCharacter($character);
-        }
-        header('Location: index.php?page=characterList');
-        exit;
-
-    default:
-        $template->display('home.tpl');
-        break;
-}
-
-$_SESSION['characterList'] = $characterList;
+$smarty->debugging = true;
+$smarty->caching = true;
+$smarty->cache_lifetime = 120;
+$smarty->assign("Name", "Fred Irving Johnathan Bradley Peppergill", true);
+$smarty->assign("FirstName", array("John", "Mary", "James", "Henry"));
+$smarty->assign("LastName", array("Doe", "Smith", "Johnson", "Case"));
+$smarty->assign(
+    "Class",
+    array(
+        array("A", "B", "C", "D"),
+        array("E", "F", "G", "H"),
+        array("I", "J", "K", "L"),
+        array("M", "N", "O", "P")
+    )
+);
+$smarty->assign(
+    "contacts",
+    array(
+        array("phone" => "1", "fax" => "2", "cell" => "3"),
+        array("phone" => "555-4444", "fax" => "555-3333", "cell" => "760-1234")
+    )
+);
+$smarty->assign("option_values", array("NY", "NE", "KS", "IA", "OK", "TX"));
+$smarty->assign("option_output", array("New York", "Nebraska", "Kansas", "Iowa", "Oklahoma", "Texas"));
+$smarty->assign("option_selected", "NE");
+$smarty->display('index.tpl');

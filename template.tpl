@@ -75,3 +75,91 @@
 <a class="nav-link" href="index.php?page=createCharacter">Create Character</a>
 <a class="nav-link" href="index.php?page=characterList">Character List</a>
 <form method="post" action="index.php?page=saveCharacter">
+    <!-- templates/createCharacterForm.tpl -->
+
+    <form method="POST" action="index.php?page=saveCharacter">
+        <!-- bestaand formulier -->
+
+        <div id="rageField" style="display:none;">
+            <label for="rage">Rage:</label>
+            <input type="number" name="rage" id="rage" min="0" max="100">
+        </div>
+
+        <div id="manaField" style="display:none;">
+            <label for="mana">Mana:</label>
+            <input type="number" name="mana" id="mana" min="0" max="100">
+        </div>
+
+        <script>
+            function toggleFields() {
+                var role = document.getElementById('role').value;
+                document.getElementById('rageField').style.display = (role === 'Warrior') ? 'block' : 'none';
+                document.getElementById('manaField').style.display = (role === 'Mage') ? 'block' : 'none';
+            }
+
+            document.getElementById('role').addEventListener('change', toggleFields);
+            toggleFields(); // Initialiseren bij laden van de pagina
+        </script>
+    </form>
+    <!-- templates/character.tpl -->
+
+    <h2>{$character->getName()}</h2>
+    <p>Role: {$character->getRole()}</p>
+    <p>Health: {$character->getHealth()}</p>
+    <p>Attack: {$character->getAttack()}</p>
+
+    {if $character->getRole() == 'Warrior' && $character->getRage() !== null}
+        <p>Rage: {$character->getRage()}</p>
+    {/if}
+
+    {if $character->getRole() == 'Mage' && $character->getMana() !== null}
+        <p>Mana: {$character->getMana()}</p>
+    {/if}
+
+    <a href="index.php?page=characterList">← Back to character list</a>
+    <div class="mb-3" id="energyField" style="display: none;">
+        <label for="energy">Energy:</label>
+        <input type="number" class="form-control" id="energy" name="energy" min="75" max="150" value="100" required>
+    </div>
+    <script>
+        function toggleFields() {
+            var role = document.getElementById('role').value;
+            document.getElementById('rageField').style.display = (role === 'Warrior') ? 'block' : 'none';
+            document.getElementById('manaField').style.display = (role === 'Mage') ? 'block' : 'none';
+            document.getElementById('energyField').style.display = (role === 'Rogue') ? 'block' : 'none';
+        }
+
+        document.getElementById('role').addEventListener('change', toggleFields);
+        toggleFields(); // initial state
+    </script>
+    <a href="index.php?page=resetStats" class="btn btn-danger">Reset Statistics</a>
+    <a href="index.php?page=recalculateStats" class="btn btn-primary">Recalculate Statistics</a>
+    <p>Total Characters: {$totalCharacters}</p>
+
+    <p>Names:</p>
+    <ul>
+        {foreach $existingNames as $name}
+            <li>{$name}</li>
+        {/foreach}
+    </ul>
+
+    <p>Character Types and counts:</p>
+    <ul>
+        {foreach from=$typeCounts key=type item=count}
+            <li>{$type}: {$count}</li>
+        {/foreach}
+    </ul>
+    <div id="shieldField" style="display:none;">
+        <label for="shield">Shield durability:</label>
+        <input type="number" name="shield" id="shield" value="50" min="0" />
+    </div>
+    <option value="Tank">Tank</option>
+    <script>
+    function toggleFields() {
+    const role = document.getElementById('role').value;
+    const shieldField = document.getElementById('shieldField');
+    shieldField.style.display = (role === 'Tank') ? 'block' : 'none';
+    }
+    document.getElementById('role').addEventListener('change', toggleFields);
+    toggleFields(); // initial call
+    </script>
